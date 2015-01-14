@@ -1,0 +1,60 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <alert ng-repeat="alert in ls.alerts" type="{{alert.type}}" close="ls.closeAlert($index)">{{alert.msg}}</alert>
+  <div class="row">
+    <div class="col-lg-12" ng-hide="ls.users.length > 0">
+      No users found.
+    </div>
+
+    <div class="col-lg-12" ng-show="ls.users.length > 0">
+      <table class="table">
+        <thead><td>Id</td><td>Name</td><td>Address</td><td>Email</td><td>Gender</td><td></td></thead>
+        <tr ng-repeat="user in ls.users"><td>{{ user.id }}</td><td>{{ user.name }}</td><td>{{ user.address }}</td><td>{{ user.email }}</td><td>{{ user.gender }}</td><td><span class="btn btn-link" ng-click="ls.removeUser(user)">delete</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">Local Storage</h1>
+      <form name="userForm" novalidate>
+        <div class="form-group">
+          <label for="id">Id</label>
+          <input type="text" required="" class="form-control" id="id" placeholder="Enter id" ng-model="ls.user._id">
+        </div>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" required="" class="form-control" id="name" placeholder="Enter name" ng-model="ls.user.name">
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="address" required="": class="form-control" id="address" placeholder="Enter address" ng-model="ls.user.address">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter email" ng-model="ls.user.email">
+        </div>
+        <div class="radio">
+          <label>
+            Male
+            <input type="radio" name="gender" id="male" value="male" ng-model="ls.user.gender">
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            Female
+            <input type="radio" name="gender" id="male" value="female" ng-model="ls.user.gender">
+          </label>
+        </div>
+        <input type="submit" ng-disabled="userForm.$invalid" class="btn btn-default" ng-click="ls.addUserToLocalStorage(ls.user)" value="Add User">
+        <input type="submit" class="btn btn-warning" ng-click="ls.clearUserTable()" value="Clear User Table">
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+      <p>Copyright &copy; 2015 Vivint Solar</p>
+  </div>
+</footer>
