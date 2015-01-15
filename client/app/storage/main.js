@@ -12,5 +12,11 @@ angular.module('storage', [])
 		templateUrl: 'app/storage/lawn-chair.html',
 		controller: 'LawnChairCtrl',
 		controllerAs: 'lc'
+	})
+	.state('pouchdb', {
+		url: '/pouchdb',
+		templateUrl: 'app/storage/pouchdb.html',
+		controller: 'PouchdbCtrl',
+		controllerAs: 'pdb'
 	});
 });

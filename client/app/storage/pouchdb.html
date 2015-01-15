@@ -1,0 +1,70 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<alert ng-repeat="alert in pdb.alerts" type="{{alert.type}}" close="pdb.closeAlert($index)">{{alert.msg}}</alert>
+	<div class="row">
+		<div class="col-lg-12" ng-hide="pdb.userList.length > 0">
+			No users found.
+		</div>
+
+		<div class="col-lg-12" ng-show="pdb.userList.length > 0">
+			<table class="table">
+				<thead>
+					<td>Id</td>
+					<td>Name</td>
+					<td>Address</td>
+					<td>Email</td>
+					<td>Gender</td>
+					<td></td>
+				</thead>
+				<tr ng-repeat="user in pdb.userList">
+					<td>{{ user._id }}</td>
+					<td>{{ user.name }}</td>
+					<td>{{ user.address }}</td>
+					<td>{{ user.email }}</td>
+					<td>{{ user.gender }}</td>
+					<td><span class="btn btn-link" ng-click="pdb.removeUser(user)">delete</span></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">PouchDB</h1>
+			<form name="userForm" novalidate>
+				<div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" required="" class="form-control" id="name" placeholder="Enter name" ng-model="pdb.user.name">
+				</div>
+				<div class="form-group">
+					<label for="address">Address</label>
+					<input type="address" required="": class="form-control" id="address" placeholder="Enter address" ng-model="pdb.user.address">
+				</div>
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="email" class="form-control" id="email" placeholder="Enter email" ng-model="pdb.user.email">
+				</div>
+				<div class="radio">
+					<label>
+						Male
+						<input type="radio" name="gender" id="male" value="male" ng-model="pdb.user.gender">
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						Female
+						<input type="radio" name="gender" id="female" value="female" ng-model="pdb.user.gender">
+					</label>
+				</div>
+				<input type="submit" ng-disabled="userForm.$invalid" class="btn btn-default" ng-click="pdb.addUser(pdb.user)" value="Add User">
+				<input type="submit" class="btn btn-warning" ng-click="pdb.clearUsers()" value="Clear User Table">
+			</form>
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+	<div class="container">
+		<p>Copyright &copy; 2015 Vivint Solar</p>
+	</div>
+</footer>
