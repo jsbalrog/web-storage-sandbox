@@ -20,7 +20,7 @@
       <form name="userForm" novalidate>
         <div class="form-group">
           <label for="id">Id</label>
-          <input type="text" required="" class="form-control" id="id" placeholder="Enter id" ng-model="ls.user._id">
+          <input type="text" required="" class="form-control" id="id" placeholder="Enter id" ng-model="ls.user.id">
         </div>
         <div class="form-group">
           <label for="name">Name</label>
@@ -43,7 +43,7 @@
         <div class="radio">
           <label>
             Female
-            <input type="radio" name="gender" id="male" value="female" ng-model="ls.user.gender">
+            <input type="radio" name="gender" id="female" value="female" ng-model="ls.user.gender">
           </label>
         </div>
         <input type="submit" ng-disabled="userForm.$invalid" class="btn btn-default" ng-click="ls.addUserToLocalStorage(ls.user)" value="Add User">

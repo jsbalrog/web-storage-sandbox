@@ -1,9 +1,22 @@
 'use strict';
 
-angular.module('storage').factory('LocalStorageService', function($q, $window) {
+angular.module('storage').factory('LocalStorageService', function($q, $window, $moment) {
   var lsKey = 'gemini_items',
       tableKey,
       localStorage = $window.localStorage;
+
+	function doTimestampCheck(userId) {
+		var ns = getLocalStorageNamespace(userId, 'sync');
+		if(!isDirty(ns)) {
+			$moment.then(function(moment) {
+				localStorage[ns] = JSON.stringify({ 'timestamp': moment().unix(), 'dirty': true });
+			});
+		}
+	}
+
+	function isDirty(ns) {
+		return JSON.parse(localStorage.getItem(ns)).dirty;
+	}
 
   function addUser(userId, user) {
     var newItem,
@@ -14,9 +27,9 @@ angular.module('storage').factory('LocalStorageService', function($q, $window) {
     ns = getLocalStorageNamespace(userId, 'users');
 
     if(ns) {
-      if(!isInTable('users', userId, user._id)) {
+      if(!isInTable('users', userId, user.id)) {
         newItem = {
-          id: user._id,
+          id: user.id,
           name: user.name,
           address: user.address,
           email: user.email,
@@ -24,11 +37,12 @@ angular.module('storage').factory('LocalStorageService', function($q, $window) {
         };
         userItems = JSON.parse(localStorage[ns]);
         userItems.push(newItem);
-        localStorage.setItem(ns, JSON.stringify(userItems));
+        localStorage[ns] = JSON.stringify(userItems);
         deferred.resolve(userItems);
       } else {
         // Already in user table. Modify existing
         updateUser(userId, user);
+				deferred.resolve(user);
       }
     } else {
       deferred.reject('Bummer. HTML5 local storage not supported.');
@@ -41,9 +55,9 @@ angular.module('storage').factory('LocalStorageService', function($q, $window) {
     if(ns) {
       getTable('users', userId).then(function(items) {
         for(var i = 0; i < items.length; i++) {
-          if(user._id === items[i].id) {
+          if(user.id === items[i].id) {
             items[i] = user;
-            localStorage.setItem(ns, JSON.stringify(items));
+            localStorage[ns] = JSON.stringify(items);
           }
         }
       });
@@ -65,7 +79,7 @@ angular.module('storage').factory('LocalStorageService', function($q, $window) {
         if(newItems.length < 1) {
           localStorage.removeItem(ns);
         } else {
-          localStorage.setItem(ns, JSON.stringify(newItems));
+          localStorage[ns] = JSON.stringify(newItems);
         }
         deferred.resolve(newItems);
       }
@@ -80,14 +94,20 @@ angular.module('storage').factory('LocalStorageService', function($q, $window) {
     tableKey = table;
     var fullKey = userId + '.' + lsKey + '.' + tableKey;
 
-    if (localStorage) {
-      if (!localStorage[fullKey]) {
-        // create a new localstorage namespace
-        localStorage[fullKey] = JSON.stringify([]);
-      }
-      retVal = fullKey;
-    }
-    return retVal;
+		try {
+			if ('localStorage' in $window && localStorage) {
+				if (!localStorage[fullKey]) {
+					// create a new localstorage namespace
+					localStorage[fullKey] = JSON.stringify([]);
+					localStorage['storage'] = '';
+					localStorage.removeItem('storage');
+				}
+				retVal = fullKey;
+			}
+			return retVal;
+		} catch(err) {
+			return null;
+		}
   }
 
   function isInTable(table, userId, id) {
@@ -136,6 +156,7 @@ angular.module('storage').factory('LocalStorageService', function($q, $window) {
 
 
   return {
+		doTimestampCheck: doTimestampCheck,
     addUser: addUser,
     updateUser: updateUser,
     removeUser: removeUser,

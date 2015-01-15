@@ -1,13 +1,11 @@
 'use strict';
 
-angular.module('storage')
-.controller('LocalStorageCtrl', function (LocalStorageService) {
+angular.module('storage').controller('LocalStorageCtrl', function (LocalStorageService) {
   var ls = this;
   var currUserId = 1234; // fake id for currently logged in user
   ls.alerts = [];
 
   ls.addUserToLocalStorage = function(user) {
-    console.log(user);
     LocalStorageService.addUser(currUserId, user).then(function success(data) {
         ls.alerts.push({ type: 'success', msg: 'Successfully saved to local storage' });
         ls.updateUserList();

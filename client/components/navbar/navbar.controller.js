@@ -10,7 +10,15 @@ angular.module('webStorageSandbox')
       {
         'title': 'Local Storage',
         'link': '/local-storage'
-      }
+      },
+			{
+				'title': 'Lawn Chair',
+				'link': '/lawn-chair'
+			},
+			{
+				'title': 'PouchDB',
+				'link': '/pouchdb'
+			}
     ];
 
     $scope.isCollapsed = true;
