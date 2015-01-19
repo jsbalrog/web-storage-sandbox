@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('storage').factory('$db', function() {
 	PouchDB.enableAllDbs = true;
 	var localDb = new PouchDB('gemini_items_users');
@@ -5,7 +7,7 @@ angular.module('storage').factory('$db', function() {
 	var options = {live: true};
 	var syncError = function() {
 		console.log('Problem encountered during database synchronization');
-	}
+	};
 
 	console.log('Replicating from local to server');
 	localDb.replicate.to(remoteDb, options, syncError);
@@ -16,15 +18,13 @@ angular.module('storage').factory('$db', function() {
 	return localDb;
 });
 
-angular.module('storage').factory("PouchdbService", function($q, $db) {
+angular.module('storage').factory('PouchdbService', function($q, $db) {
 
 	function addUser(currUserId, user) {
-		var deferred = $q.defer();
-
 		return $db.post(user);
 	}
 
-	function getAllUsers(currUserId) {
+	function getAllUsers() {
 		var deferred = $q.defer(),
 				retVal = [];
 
@@ -35,7 +35,7 @@ angular.module('storage').factory("PouchdbService", function($q, $db) {
 				console.log(res.rows);
 				res.rows.forEach(function(row) {
 					retVal.push(row.doc);
-				})
+				});
 				deferred.resolve(retVal);
 			}
 		});
