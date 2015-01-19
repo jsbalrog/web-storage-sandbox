@@ -25,5 +25,14 @@ angular.module('storage').controller('PouchdbCtrl', function(PouchdbService) {
 		});
 	};
 
+	pdb.removeUser = function(user) {
+		PouchdbService.removeUser(currUserId, user).then(function success(data) {
+			pdb.getAllUsers();
+		}, function error(err) {
+			console.log(err);
+		});
+	};
+
 	pdb.getAllUsers();
 });
+

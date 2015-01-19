@@ -42,8 +42,13 @@ angular.module('storage').factory("PouchdbService", function($q, $db) {
 		return deferred.promise;
 	}
 
+	function removeUser(currUserId, user) {
+		return $db.remove(user);
+	}
+
 	return {
 		addUser: addUser,
-		getAllUsers: getAllUsers
+		getAllUsers: getAllUsers,
+		removeUser: removeUser
 	};
 });
